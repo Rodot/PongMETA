@@ -1,7 +1,5 @@
 #include <Gamebuino-Meta.h>
 
-boolean paused = false;
-
 //player variables
 int player_score = 0;
 int player_h = 8;
@@ -38,18 +36,10 @@ int winner_timer;
 int winner_timermax = 40;
 int winner;
 
-///////////////////////////////////// SETUP
-void setup() {
-  gb.begin();
-  //gb.display.setFont(font5x7); //change the font to the large one
-  //gb.titleScreen("Pong Solo");
-  gb.pickRandomSeed(); //pick a different random seed each time for games to be different
-  //gb.battery.show = false; //hide the battery indicator
-}
-
 ///////////////////////////////////// MOVE PLAYER
 void movePlayer() {
   //move the player
+  
   //human control
   if (gb.buttons.repeat(BUTTON_UP, 1)) {
     player_timeout = player_timeoutmax;
@@ -64,6 +54,7 @@ void movePlayer() {
       }
     }
   }
+  
   //computer control after timeout
   if (player_timeout > 0) {
     player_timeout--;
@@ -83,6 +74,7 @@ void movePlayer() {
 ///////////////////////////////////// MOVE OPONENT
 void moveOponent() {
   //move the oponent
+  
   //human control
   if (gb.buttons.repeat(BUTTON_B, 1)) {
     oponent_timeout = oponent_timeoutmax;
@@ -99,6 +91,7 @@ void moveOponent() {
       }
     }
   }
+  
   //computer control after timeout
   if (oponent_timeout > 0) {
     oponent_timeout--;
@@ -118,18 +111,21 @@ void moveOponent() {
 ///////////////////////////////////// UPDATE COLLISIONS
 void updateCollisions() {
   //check for ball collisions
+  
   //collision with the top border
   if (ball_y < 0) {
     ball_y = 0;
     ball_vy = -ball_vy;
     gb.sound.playTick();
   }
+  
   //collision with the bottom border
   if ((ball_y + ball_size) > gb.display.height()) {
     ball_y = gb.display.height() - ball_size;
     ball_vy = -ball_vy;
     gb.sound.playTick();
   }
+  
   //collision with the player
   if (gb.collideRectRect(ball_x, ball_y, ball_size, ball_size, player_x, player_y, player_w, player_h)) {
     ball_x = player_x + player_w;
@@ -139,6 +135,7 @@ void updateCollisions() {
     gb.sound.playTick();
     gb.lights.drawPixel(0, map(ball_y, 0, gb.display.height(), 0, 4));
   }
+  
   //collision with the oponent
   if (gb.collideRectRect(ball_x, ball_y, ball_size, ball_size, oponent_x, oponent_y, oponent_w, oponent_h)) {
     ball_x = oponent_x - ball_size;
@@ -147,6 +144,7 @@ void updateCollisions() {
     gb.sound.playTick();
     gb.lights.drawPixel(1, map(ball_y, 0, gb.display.height(), 0, 4));
   }
+  
   //collision with the left side
   if (ball_x < 0) {
     oponent_score = oponent_score + 1;
@@ -160,6 +158,7 @@ void updateCollisions() {
     ball_vy = 0;
     ball_y = random(0, gb.display.height() - ball_size);
   }
+  
   //collision with the right side
   if ((ball_x + ball_size) > gb.display.width()) {
     player_score = player_score + 1;
@@ -191,10 +190,10 @@ void draw() {
       gb.lights.fillRect(1,0,1,4);
     }
   }
-
+  
   gb.display.setColor(WHITE);
+  
   //draw the score
-  //gb.display.fontSize = 2;
   gb.display.setCursor(15, 16);
   gb.display.print(player_score);
 
@@ -205,8 +204,10 @@ void draw() {
   for (int i = 0; i < gb.display.height(); i += 4) {
     gb.display.drawRect(gb.display.width() / 2, i, 1, 2);
   }
+  
   //draw the ball
   gb.display.fillRect(ball_x, ball_y, ball_size, ball_size);
+  
   //draw the player
   if (player_timeout == 0) {
     gb.display.setColor(GRAY);
@@ -214,6 +215,7 @@ void draw() {
     gb.display.setColor(WHITE);
   }
   gb.display.fillRect(player_x, player_y, player_w, player_h);
+  
   //draw the oponent
   if (oponent_timeout == 0) {
     gb.display.setColor(GRAY);
@@ -221,6 +223,7 @@ void draw() {
     gb.display.setColor(WHITE);
   }
   gb.display.fillRect(oponent_x, oponent_y, oponent_w, oponent_h);
+  
   //TRY ME! message
   if ((player_timeout == 0) && (oponent_timeout == 0)) {
     gb.display.setCursor(27, 16);
@@ -231,13 +234,18 @@ void draw() {
   }
 }
 
+///////////////////////////////////// SETUP
+void setup() {
+  gb.begin();
+  gb.pickRandomSeed(); //pick a different random seed each time for games to be different
+}
+
 ///////////////////////////////////// LOOP
 void loop() {
   if (gb.update()) {
     // clear the previous screen
     gb.display.clear();
     gb.lights.clear();
-
 
     //pause the game if C is pressed
     if (gb.buttons.pressed(BUTTON_C)) {
@@ -257,7 +265,6 @@ void loop() {
     updateCollisions();
 
     //reset score when 10 is reached
-
     if (player_score == 10) {
       winner = PLAYER;
       winner_timer = winner_timermax;
@@ -270,7 +277,7 @@ void loop() {
       player_score = 0;
       oponent_score = 0;
     }
-
+    
     draw();
   }
 }
