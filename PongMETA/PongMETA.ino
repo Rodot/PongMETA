@@ -191,6 +191,7 @@ void draw() {
 
   //draw the middle line
   for (int i = 0; i < gb.display.height(); i += 4) {
+    if (gb.metaMode.isActive()) gb.display.setColor((gb.frameCount + i / 4) % 4 >= 2 ? WHITE : ORANGE);
     gb.display.drawFastVLine(gb.display.width() / 2, i, 2);
   }
 
@@ -242,6 +243,11 @@ void loop() {
     //move the ball
     ball_x = ball_x + ball_vx;
     ball_y = ball_y + ball_vy;
+    
+    // Shhhhhhhhhhh ;)
+    if (gb.metaMode.isActive() && random(0, 30) == 0) 
+      ball_vy = random(-ball_vymax + 1, ball_vymax);
+
     
     updateCollisions();
 
