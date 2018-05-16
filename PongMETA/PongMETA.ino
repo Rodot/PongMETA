@@ -245,8 +245,8 @@ void loop() {
     ball_y = ball_y + ball_vy;
     
     // Shhhhhhhhhhh ;)
-    if (gb.metaMode.isActive() && random(0, 30) == 0) 
-      ball_vy = random(-ball_vymax + 1, ball_vymax);
+    if (gb.metaMode.isActive() && (ball_x == gb.display.width() / 2 || ball_x == gb.display.width() / 2 + 1)) 
+      ball_vy = random(-4, 5);
 
     
     updateCollisions();
