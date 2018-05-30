@@ -123,7 +123,7 @@ void updateCollisions() {
     ball_vy = constrain(ball_vy, (-ball_vymax), ball_vymax);
     gb.sound.playTick();
     gb.lights.drawPixel(0, map(ball_y, 0, gb.display.height(), 0, 4));
-  	player_h = gb.metaMode.isActive() ? random(4, 10) : 8;
+  	player_h = gb.metaMode.isActive() ? random(4, 32) : 8;
   }
 
   //collision with the opponent
@@ -133,7 +133,7 @@ void updateCollisions() {
     ball_vy += (opponent_vy / 2);
     gb.sound.playTick();
     gb.lights.drawPixel(1, map(ball_y, 0, gb.display.height(), 0, 4));
-    opponent_h = gb.metaMode.isActive() ? random(4, 10) : 8;
+    opponent_h = gb.metaMode.isActive() ? random(4, 32) : 8;
   }
 
   //collision with the left side
